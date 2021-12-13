@@ -1,0 +1,26 @@
+[package]
+name = "rkaiq"
+version = "0.1.0"
+edition = "2021"
+description = "Rockchip RKAIQ bindings for Rust"
+authors = [ "Varphone Wong <varphone@qq.com>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rkaiq-sys = { version = "0.1.0", path = "rkaiq-sys" }
+
+[dev-dependencies]
+gst = { version = "0.17", package = "gstreamer" }
+gst-base = { version = "0.17", package = "gstreamer-base" }
+gst-video = { version = "0.17", package = "gstreamer-video" }
+
+[features]
+default = ["rel_2_0"]
+rel_1_0 = []
+rel_2_0 = []
+
+[workspace]
+members = [
+    "rkaiq-sys",
+]
