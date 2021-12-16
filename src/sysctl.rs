@@ -5,7 +5,8 @@ use super::context::Context;
 use super::error::XCamError;
 use super::ffi;
 use super::types::{
-    AlgoContext, AlgoDescComm, ModuleId, Rect, StaticInfo, WorkingMode, XCamResult,
+    AlgoContext, AlgoDescComm, CpslCap, CpslCfg, CpslInfo, ModuleId, Rect, StaticInfo, WorkingMode,
+    XCamResult,
 };
 use std::ffi::{CStr, CString};
 
@@ -67,6 +68,15 @@ pub trait SystemControl {
     /// # Safety
     /// 请确保返回值仅在 Context 生存期间使用。
     unsafe fn get_enabled_ax_lib_ctx(&self, algo_type: i32) -> *const AlgoContext;
+
+    /// 获取补光灯控制信息。
+    fn get_cps_lt_info(&self) -> XCamResult<CpslInfo>;
+
+    /// 查询补光灯的支持能力。
+    fn query_cps_lt_cap(&self) -> XCamResult<CpslCap>;
+
+    /// 设置补光灯控制信息。
+    fn set_cps_lt_cfg<T: Into<CpslCfg>>(&self, cfg: T) -> XCamResult<()>;
 
     fn update_iq<T: Into<Vec<u8>>>(&self, iq_file: T) -> XCamResult<()>;
 
@@ -188,6 +198,41 @@ impl SystemControl for Context {
 
     unsafe fn get_enabled_ax_lib_ctx(&self, algo_type: i32) -> *const AlgoContext {
         ffi::rk_aiq_uapi_sysctl_getEnabledAxlibCtx(self.internal.as_ptr(), algo_type)
+    }
+
+    fn get_cps_lt_info(&self) -> XCamResult<CpslInfo> {
+        let mut info = CpslInfo::default();
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_sysctl_getCpsLtInfo(
+                self.internal.as_ptr(),
+                &mut info,
+            ))
+            .ok()
+            .map(|_| info)
+        }
+    }
+
+    fn query_cps_lt_cap(&self) -> XCamResult<CpslCap> {
+        let mut cap = CpslCap::default();
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_sysctl_queryCpsLtCap(
+                self.internal.as_ptr(),
+                &mut cap,
+            ))
+            .ok()
+            .map(|_| cap)
+        }
+    }
+
+    fn set_cps_lt_cfg<T: Into<CpslCfg>>(&self, cfg: T) -> XCamResult<()> {
+        let mut cfg = cfg.into();
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_sysctl_setCpsLtCfg(
+                self.internal.as_ptr(),
+                &mut cfg,
+            ))
+            .ok()
+        }
     }
 
     fn update_iq<T: Into<Vec<u8>>>(&self, iq_file: T) -> XCamResult<()> {
