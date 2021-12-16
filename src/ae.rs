@@ -1,7 +1,7 @@
 use super::context::Context;
 use super::error::XCamError;
 use super::ffi;
-use super::types::{OpMode, XCamResult};
+use super::types::{AntiFlickerMode, ExpPwrLineFreq, OpMode, XCamResult};
 
 #[cfg(feature = "rel_1_0")]
 pub enum AeMode {
@@ -91,6 +91,36 @@ pub trait AutoExposure {
 
     fn set_blc_mode(&self, enabled: bool, mode: AeMeasAreaType) -> XCamResult<()>;
     fn set_blc_strength(&self, strength: i32) -> XCamResult<()>;
+
+    /// 强光抑制开关。
+    fn set_hlc_mode(&self, enabled: bool) -> XCamResult<()>;
+
+    /// 设置强光抑制强度。
+    ///
+    /// # Parameters
+    /// * `strength` - 抑制强度，范围[1,100]。
+    fn set_hlc_strength(&self, strength: i32) -> XCamResult<()>;
+
+    /// 获取当前暗区提升强度。
+    fn get_dark_area_boost_strth(&self) -> XCamResult<u32>;
+
+    /// 设置暗区提升强度。
+    ///
+    /// # Parameters
+    /// * `level` - 暗区提升强度，范围[1,10]。
+    fn set_dark_area_boost_strth(&self, level: u32) -> XCamResult<()>;
+
+    /// 获取抗闪模式。
+    fn get_anti_flicker_mode(&self) -> XCamResult<AntiFlickerMode>;
+
+    /// 设置抗闪模式。
+    fn set_anti_flicker_mode<T: Into<AntiFlickerMode>>(&self, mode: T) -> XCamResult<()>;
+
+    /// 获取抗闪频率。
+    fn get_exp_pwr_line_freq_mode(&self) -> XCamResult<ExpPwrLineFreq>;
+
+    /// 设置抗闪频率。
+    fn set_exp_pwr_line_freq_mode<T: Into<ExpPwrLineFreq>>(&self, mode: T) -> XCamResult<()>;
 }
 
 impl AutoExposure for Context {
@@ -207,6 +237,88 @@ impl AutoExposure for Context {
             XCamError::from(ffi::rk_aiq_uapi_setBLCStrength(
                 self.internal.as_ptr(),
                 strength,
+            ))
+            .ok()
+        }
+    }
+
+    fn set_hlc_mode(&self, enabled: bool) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_setHLCMode(self.internal.as_ptr(), enabled)).ok()
+        }
+    }
+
+    fn set_hlc_strength(&self, strength: i32) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_setHLCStrength(
+                self.internal.as_ptr(),
+                strength,
+            ))
+            .ok()
+        }
+    }
+
+    fn get_dark_area_boost_strth(&self) -> XCamResult<u32> {
+        let mut level: u32 = 0;
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_getDarkAreaBoostStrth(
+                self.internal.as_ptr(),
+                &mut level,
+            ))
+            .ok()
+            .map(|_| level)
+        }
+    }
+
+    fn set_dark_area_boost_strth(&self, level: u32) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_setDarkAreaBoostStrth(
+                self.internal.as_ptr(),
+                level,
+            ))
+            .ok()
+        }
+    }
+
+    fn get_anti_flicker_mode(&self) -> XCamResult<AntiFlickerMode> {
+        let mut mode: AntiFlickerMode = Default::default();
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_getAntiFlickerMode(
+                self.internal.as_ptr(),
+                &mut mode,
+            ))
+            .ok()
+            .map(|_| mode)
+        }
+    }
+
+    fn set_anti_flicker_mode<T: Into<AntiFlickerMode>>(&self, mode: T) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_setAntiFlickerMode(
+                self.internal.as_ptr(),
+                mode.into(),
+            ))
+            .ok()
+        }
+    }
+
+    fn get_exp_pwr_line_freq_mode(&self) -> XCamResult<ExpPwrLineFreq> {
+        let mut mode: ExpPwrLineFreq = Default::default();
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_getExpPwrLineFreqMode(
+                self.internal.as_ptr(),
+                &mut mode,
+            ))
+            .ok()
+            .map(|_| mode)
+        }
+    }
+
+    fn set_exp_pwr_line_freq_mode<T: Into<ExpPwrLineFreq>>(&self, mode: T) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi_setExpPwrLineFreqMode(
+                self.internal.as_ptr(),
+                mode.into(),
             ))
             .ok()
         }

@@ -3,9 +3,11 @@ use super::ffi;
 
 pub type AlgoContext = ffi::RkAiqAlgoContext;
 pub type AlgoDescComm = ffi::RkAiqAlgoDesComm;
+pub type AntiFlickerMode = ffi::antiFlickerMode_t;
 pub type CpslCfg = ffi::rk_aiq_cpsl_cfg_t;
 pub type CpslCap = ffi::rk_aiq_cpsl_cap_t;
 pub type CpslInfo = ffi::rk_aiq_cpsl_info_t;
+pub type ExpPwrLineFreq = ffi::expPwrLineFreq_t;
 pub type ModuleId = ffi::rk_aiq_module_id_t;
 pub type Rect = ffi::rk_aiq_rect_t;
 pub type StaticInfo = ffi::rk_aiq_static_info_t;
