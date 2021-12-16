@@ -6,6 +6,7 @@ pub use super::context::Context;
 pub use super::error::XCamError;
 pub use super::gamma::Gamma;
 pub use super::hdr::HighDynamicRange;
+pub use super::misc::Miscellaneous;
 pub use super::nr::NoiseRemoval;
 pub use super::sharpen::Sharpen;
 pub use super::sysctl::SystemControl;

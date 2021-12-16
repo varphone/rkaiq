@@ -8,6 +8,7 @@ pub mod context;
 pub mod error;
 pub mod gamma;
 pub mod hdr;
+pub mod misc;
 pub mod nr;
 pub mod prelude;
 pub mod sharpen;
