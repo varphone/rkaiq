@@ -2,6 +2,7 @@ pub use rkaiq_sys as ffi;
 
 pub mod acm;
 pub mod ae;
+pub mod asd;
 pub mod awb;
 pub mod context;
 pub mod error;
