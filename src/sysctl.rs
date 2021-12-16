@@ -9,6 +9,36 @@ use super::types::{
 };
 use std::ffi::{CStr, CString};
 
+/// 一个描述静态信息枚举器的类型。
+pub struct StaticMetas {
+    index: i32,
+}
+
+impl StaticMetas {
+    pub fn new() -> Self {
+        Self { index: 0 }
+    }
+}
+
+impl Default for StaticMetas {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Iterator for StaticMetas {
+    type Item = ffi::rk_aiq_static_info_t;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        enum_static_metas(self.index)
+            .map(|x| {
+                self.index += 1;
+                x
+            })
+            .ok()
+    }
+}
+
 pub trait SystemControl {
     fn prepare(&self, width: u32, height: u32, mode: WorkingMode) -> XCamResult<()>;
 
@@ -221,6 +251,19 @@ pub fn get_static_metas<T: Into<Vec<u8>>>(vd: T) -> XCamResult<StaticInfo> {
         ))
         .ok()
         .map(|_| data)
+    }
+}
+
+/// 枚举 AIQ 获取到的静态信息。
+///
+/// # Parameters
+/// * `index` - 索引号，从 0 开始。
+pub fn enum_static_metas(index: i32) -> XCamResult<StaticInfo> {
+    unsafe {
+        let mut data = ffi::rk_aiq_static_info_t::default();
+        XCamError::from(ffi::rk_aiq_uapi_sysctl_enumStaticMetas(index, &mut data))
+            .ok()
+            .map(|_| data)
     }
 }
 
