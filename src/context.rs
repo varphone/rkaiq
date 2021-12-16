@@ -1,4 +1,4 @@
-use super::ffi;
+use super::ffi::{self, XCamReturn};
 use std::borrow::Cow;
 use std::ffi::CString;
 use std::io;
@@ -13,7 +13,12 @@ impl Context {
         let sns_ent_name = CString::new(sns_ent_name).unwrap();
         let iq_file_dir = CString::new(iq_file_dir).unwrap();
         let ptr = unsafe {
-            ffi::rk_aiq_uapi_sysctl_init(sns_ent_name.as_ptr(), iq_file_dir.as_ptr(), None, None)
+            ffi::rk_aiq_uapi_sysctl_init(
+                sns_ent_name.as_ptr(),
+                iq_file_dir.as_ptr(),
+                Some(default_error_callback),
+                Some(default_metas_callback),
+            )
         };
         NonNull::new(ptr).map_or_else(
             || Err(io::Error::last_os_error()),
@@ -58,4 +63,14 @@ impl<'a> Default for ContextBuilder<'a> {
     fn default() -> Self {
         Self::new()
     }
+}
+
+unsafe extern "C" fn default_error_callback(err_msg: *mut ffi::rk_aiq_err_msg_t) -> XCamReturn {
+    println!("err_msg={:p}", err_msg);
+    XCamReturn::XCAM_RETURN_NO_ERROR
+}
+
+unsafe extern "C" fn default_metas_callback(metas: *mut ffi::rk_aiq_metas_t) -> XCamReturn {
+    println!("metas={:p}", metas);
+    XCamReturn::XCAM_RETURN_NO_ERROR
 }
