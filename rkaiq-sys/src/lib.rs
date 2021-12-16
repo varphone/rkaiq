@@ -22,6 +22,12 @@ impl Default for expPwrLineFreq_t {
     }
 }
 
+impl Default for opMode_t {
+    fn default() -> Self {
+        opMode_t::OP_INVAL
+    }
+}
+
 impl Default for rk_aiq_wb_scene_t {
     fn default() -> Self {
         rk_aiq_wb_scene_t::RK_AIQ_WBCT_INCANDESCENT
