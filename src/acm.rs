@@ -41,6 +41,7 @@ impl AutoColorManagment for Context {
             .map(|_| val)
         }
     }
+
     fn set_brightness(&self, val: u32) -> XCamResult<()> {
         unsafe { XCamError::from(ffi::rk_aiq_uapi_setBrightness(self.internal.as_ptr(), val)).ok() }
     }
@@ -72,6 +73,7 @@ impl AutoColorManagment for Context {
             .map(|_| val)
         }
     }
+
     fn set_saturation(&self, val: u32) -> XCamResult<()> {
         unsafe { XCamError::from(ffi::rk_aiq_uapi_setSaturation(self.internal.as_ptr(), val)).ok() }
     }
