@@ -5,6 +5,7 @@ pub mod ae;
 pub mod awb;
 pub mod context;
 pub mod error;
+pub mod gamma;
 pub mod hdr;
 pub mod nr;
 pub mod prelude;
