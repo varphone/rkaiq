@@ -21,3 +21,9 @@ impl Default for expPwrLineFreq_t {
         expPwrLineFreq_t::EXP_PWR_LINE_FREQ_DIS
     }
 }
+
+impl Default for rk_aiq_wb_scene_t {
+    fn default() -> Self {
+        rk_aiq_wb_scene_t::RK_AIQ_WBCT_INCANDESCENT
+    }
+}
