@@ -11,6 +11,8 @@ pub type ExpPwrLineFreq = ffi::expPwrLineFreq_t;
 pub type ModuleId = ffi::rk_aiq_module_id_t;
 pub type Rect = ffi::rk_aiq_rect_t;
 pub type StaticInfo = ffi::rk_aiq_static_info_t;
+pub type WbGain = ffi::rk_aiq_wb_gain_t;
+pub type WbScene = ffi::rk_aiq_wb_scene_t;
 pub type XCamResult<T> = Result<T, XCamError>;
 
 /// 一个描述自动手动模式的枚举。
