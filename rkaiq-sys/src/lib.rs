@@ -9,3 +9,15 @@
 #![allow(unaligned_references)]
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+impl Default for antiFlickerMode_t {
+    fn default() -> Self {
+        antiFlickerMode_t::ANTIFLICKER_NORMAL_MODE
+    }
+}
+
+impl Default for expPwrLineFreq_t {
+    fn default() -> Self {
+        expPwrLineFreq_t::EXP_PWR_LINE_FREQ_DIS
+    }
+}
