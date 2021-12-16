@@ -28,6 +28,12 @@ impl Default for opMode_t {
     }
 }
 
+impl Default for rk_aiq_gray_mode_t {
+    fn default() -> Self {
+        rk_aiq_gray_mode_t::RK_AIQ_GRAY_MODE_CPSL
+    }
+}
+
 impl Default for rk_aiq_wb_scene_t {
     fn default() -> Self {
         rk_aiq_wb_scene_t::RK_AIQ_WBCT_INCANDESCENT
