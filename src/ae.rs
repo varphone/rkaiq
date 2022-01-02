@@ -88,6 +88,9 @@ pub trait AutoExposure {
     fn set_exp_time_range(&self, min: f32, max: f32) -> XCamResult<()>;
 
     fn set_manual_exp(&self, gain: f32, time: f32) -> XCamResult<()>;
+    fn set_manual_exp_fps(&self, gain: f32, time_fps: usize) -> XCamResult<()>;
+    fn set_manual_exp_ms(&self, gain: f32, time_ms: usize) -> XCamResult<()>;
+    fn set_manual_exp_us(&self, gain: f32, time_us: usize) -> XCamResult<()>;
 
     fn set_blc_mode(&self, enabled: bool, mode: AeMeasAreaType) -> XCamResult<()>;
     fn set_blc_strength(&self, strength: i32) -> XCamResult<()>;
@@ -219,6 +222,21 @@ impl AutoExposure for Context {
             ))
             .ok()
         }
+    }
+
+    fn set_manual_exp_fps(&self, gain: f32, time_fps: usize) -> XCamResult<()> {
+        let time = 1.0 / (time_fps as f32);
+        self.set_manual_exp(gain, time)
+    }
+
+    fn set_manual_exp_ms(&self, gain: f32, time_ms: usize) -> XCamResult<()> {
+        let time = 1.0 / 1000.0 * (time_ms as f32);
+        self.set_manual_exp(gain, time)
+    }
+
+    fn set_manual_exp_us(&self, gain: f32, time_us: usize) -> XCamResult<()> {
+        let time = 1.0 / 1000000.0 * (time_us as f32);
+        self.set_manual_exp(gain, time)
     }
 
     fn set_blc_mode(&self, enabled: bool, mode: AeMeasAreaType) -> XCamResult<()> {
