@@ -69,11 +69,11 @@ impl<'a> Default for ContextBuilder<'a> {
 }
 
 unsafe extern "C" fn default_error_callback(err_msg: *mut ffi::rk_aiq_err_msg_t) -> XCamReturn {
-    println!("err_msg={:p}", err_msg);
+    // println!("err_msg={:p}", err_msg);
     XCamReturn::XCAM_RETURN_NO_ERROR
 }
 
 unsafe extern "C" fn default_metas_callback(metas: *mut ffi::rk_aiq_metas_t) -> XCamReturn {
-    println!("metas={:p}", metas);
+    // println!("metas={:p}", metas);
     XCamReturn::XCAM_RETURN_NO_ERROR
 }
