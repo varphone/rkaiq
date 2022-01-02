@@ -20,6 +20,7 @@ pub type WbScene = ffi::rk_aiq_wb_scene_t;
 pub type XCamResult<T> = Result<T, XCamError>;
 
 /// 一个描述自动手动模式的枚举。
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum OpMode {
     Auto,
     Manual,
