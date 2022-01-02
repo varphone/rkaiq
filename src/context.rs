@@ -8,6 +8,9 @@ pub struct Context {
     pub(crate) internal: NonNull<ffi::rk_aiq_sys_ctx_t>,
 }
 
+unsafe impl Send for Context {}
+unsafe impl Sync for Context {}
+
 impl Context {
     pub fn new(sns_ent_name: &str, iq_file_dir: &str) -> Result<Self, io::Error> {
         let sns_ent_name = CString::new(sns_ent_name).unwrap();
