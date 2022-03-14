@@ -312,6 +312,46 @@ pub fn enum_static_metas(index: i32) -> XCamResult<StaticInfo> {
     }
 }
 
+/// 设置全局日志等级。
+#[cfg(feature = "fullv")]
+pub fn set_gll(level: i32) {
+    unsafe {
+        ffi::rk_aiq_uapi_sysctl_set_gll(level);
+    }
+}
+
+/// 获取全局日志等级。
+#[cfg(feature = "fullv")]
+pub fn get_gll() -> i32 {
+    unsafe { ffi::rk_aiq_uapi_sysctl_get_gll() }
+}
+
+/// 初始化 RKAIQ 库。
+#[cfg(feature = "fullv")]
+pub fn init_lib() {
+    unsafe {
+        ffi::rk_aiq_init_lib();
+    }
+}
+
+/// 释放 RKAIQ 库。
+#[cfg(feature = "fullv")]
+pub fn deinit_lib() {
+    unsafe {
+        ffi::rk_aiq_deinit_lib();
+    }
+}
+
+/// 释放 RKAIQ 库。
+#[cfg(feature = "fullv")]
+pub fn set_log_callback(
+    cb: Option<unsafe extern "C" fn(i32, *const std::os::raw::c_char, *const std::os::raw::c_char)>,
+) {
+    unsafe {
+        ffi::rk_aiq_set_log_callback(cb);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

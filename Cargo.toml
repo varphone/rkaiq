@@ -21,6 +21,7 @@ gst-video = { version = "0.17", package = "gstreamer-video" }
 
 [features]
 default = ["rel_2_0"]
+fullv = []
 rel_1_0 = []
 rel_2_0 = []
 
