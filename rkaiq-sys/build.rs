@@ -3,8 +3,8 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 
-const DEFAULT_RKAIQ_INCLUDE_DIR: &str = "/opt/fullv/2021.02.7-rklaser1/staging/usr/include/rkaiq";
-const DEFAULT_RKAIQ_SYSROOT_DIR: &str = "/opt/fullv/2021.02.7-rklaser1/staging";
+const DEFAULT_RKAIQ_INCLUDE_DIR: &str = "/opt/fullv/2021.02.8-rklaser1/staging/usr/include/rkaiq";
+const DEFAULT_TARGET_SYSROOT_DIR: &str = "/opt/fullv/2021.02.8-rklaser1/staging";
 
 #[cfg(feature = "isp-hw-v20")]
 const DEFAULT_ISP_HW_VER_DEF: &str = "-DISP_HW_V20=1";
@@ -20,8 +20,8 @@ fn main() {
 
     let rkaiq_include_dir =
         env::var("RKAIQ_INCLUDE_DIR").unwrap_or_else(|_| DEFAULT_RKAIQ_INCLUDE_DIR.into());
-    let rkaiq_sysroot_dir =
-        env::var("RKAIQ_SYSROOT_DIR").unwrap_or_else(|_| DEFAULT_RKAIQ_SYSROOT_DIR.into());
+    let target_sysroot_dir =
+        env::var("TARGET_SYSROOT_DIR").unwrap_or_else(|_| DEFAULT_TARGET_SYSROOT_DIR.into());
 
     let wrapper_path = PathBuf::from(env::var("OUT_DIR").unwrap()).join("wrapper.h");
     let wrapper_path = wrapper_path.to_str().unwrap();
@@ -64,7 +64,7 @@ fn main() {
         .clang_arg(format!("-I{}/uAPI", rkaiq_include_dir))
         .clang_arg(format!("-I{}/xcore", rkaiq_include_dir))
         .clang_arg(format!("-I{}", rkaiq_include_dir))
-        .clang_arg(format!("--sysroot={}", rkaiq_sysroot_dir))
+        .clang_arg(format!("--sysroot={}", target_sysroot_dir))
         // .parse_callbacks(Box::new(MyParseCallbacks::default()))
         .generate()
         .expect("Unable to generate bindings");
