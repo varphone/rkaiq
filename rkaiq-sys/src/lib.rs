@@ -39,3 +39,13 @@ impl Default for rk_aiq_wb_scene_t {
         rk_aiq_wb_scene_t::RK_AIQ_WBCT_INCANDESCENT
     }
 }
+
+impl rk_aiq_static_info_t {
+    pub fn sensor_name(&self) -> String {
+        unsafe {
+            std::ffi::CStr::from_ptr(self.sensor_info.sensor_name.as_ptr())
+                .to_string_lossy()
+                .into()
+        }
+    }
+}
