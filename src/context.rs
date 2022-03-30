@@ -1,4 +1,7 @@
 use super::ffi::{self, XCamReturn};
+use super::sysctl;
+use super::types::WorkingMode;
+
 use std::borrow::Cow;
 use std::ffi::CString;
 use std::io;
@@ -27,6 +30,17 @@ impl Context {
             || Err(io::Error::last_os_error()),
             |v| Ok(Self { internal: v }),
         )
+    }
+
+    pub fn with_force_iq_file(
+        sns_ent_name: &str,
+        iq_file_dir: &str,
+        iq_file: &str,
+        mode: WorkingMode,
+    ) -> Result<Self, io::Error> {
+        sysctl::pre_init(sns_ent_name, mode, iq_file)
+            .map_err(|x| io::Error::new(io::ErrorKind::Other, format!("{}", x)))?;
+        Self::new(sns_ent_name, iq_file_dir)
     }
 }
 
