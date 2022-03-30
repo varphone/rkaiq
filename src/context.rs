@@ -16,7 +16,7 @@ impl Context {
         let sns_ent_name = CString::new(sns_ent_name).unwrap();
         let iq_file_dir = CString::new(iq_file_dir).unwrap();
         let ptr = unsafe {
-            ffi::rk_aiq_uapi_sysctl_init(
+            ffi::rk_aiq_uapi2_sysctl_init(
                 sns_ent_name.as_ptr(),
                 iq_file_dir.as_ptr(),
                 Some(default_error_callback),
@@ -33,7 +33,7 @@ impl Context {
 impl Drop for Context {
     fn drop(&mut self) {
         unsafe {
-            ffi::rk_aiq_uapi_sysctl_deinit(self.internal.as_ptr());
+            ffi::rk_aiq_uapi2_sysctl_deinit(self.internal.as_ptr());
         }
     }
 }

@@ -88,7 +88,7 @@ pub trait SystemControl {
 impl SystemControl for Context {
     fn prepare(&self, width: u32, height: u32, mode: WorkingMode) -> XCamResult<()> {
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_prepare(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_prepare(
                 self.internal.as_ptr(),
                 width,
                 height,
@@ -99,12 +99,12 @@ impl SystemControl for Context {
     }
 
     fn start(&self) -> XCamResult<()> {
-        unsafe { XCamError::from(ffi::rk_aiq_uapi_sysctl_start(self.internal.as_ptr())).ok() }
+        unsafe { XCamError::from(ffi::rk_aiq_uapi2_sysctl_start(self.internal.as_ptr())).ok() }
     }
 
     fn stop(&self, keep_ext_hw_st: bool) -> XCamResult<()> {
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_stop(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_stop(
                 self.internal.as_ptr(),
                 keep_ext_hw_st,
             ))
@@ -114,7 +114,7 @@ impl SystemControl for Context {
 
     fn enable_module<T: Into<ModuleId>>(&self, id: T) -> XCamResult<()> {
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_setModuleCtl(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_setModuleCtl(
                 self.internal.as_ptr(),
                 id.into(),
                 true,
@@ -125,7 +125,7 @@ impl SystemControl for Context {
 
     fn disable_module<T: Into<ModuleId>>(&self, id: T) -> XCamResult<()> {
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_setModuleCtl(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_setModuleCtl(
                 self.internal.as_ptr(),
                 id.into(),
                 false,
@@ -137,7 +137,7 @@ impl SystemControl for Context {
     fn is_module_enabled<T: Into<ModuleId>>(&self, id: T) -> bool {
         let mut enabled = false;
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_getModuleCtl(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_getModuleCtl(
                 self.internal.as_ptr(),
                 id.into(),
                 &mut enabled,
@@ -170,7 +170,7 @@ impl SystemControl for Context {
 
     fn enable_ax_lib(&self, algo_type: i32, lib_id: i32) -> XCamResult<()> {
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_enableAxlib(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_enableAxlib(
                 self.internal.as_ptr(),
                 algo_type,
                 lib_id,
@@ -182,7 +182,7 @@ impl SystemControl for Context {
 
     fn disable_ax_lib(&self, algo_type: i32, lib_id: i32) -> XCamResult<()> {
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_enableAxlib(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_enableAxlib(
                 self.internal.as_ptr(),
                 algo_type,
                 lib_id,
@@ -197,13 +197,13 @@ impl SystemControl for Context {
     }
 
     unsafe fn get_enabled_ax_lib_ctx(&self, algo_type: i32) -> *const AlgoContext {
-        ffi::rk_aiq_uapi_sysctl_getEnabledAxlibCtx(self.internal.as_ptr(), algo_type)
+        ffi::rk_aiq_uapi2_sysctl_getEnabledAxlibCtx(self.internal.as_ptr(), algo_type)
     }
 
     fn get_cps_lt_info(&self) -> XCamResult<CpslInfo> {
         let mut info = CpslInfo::default();
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_getCpsLtInfo(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_getCpsLtInfo(
                 self.internal.as_ptr(),
                 &mut info,
             ))
@@ -215,7 +215,7 @@ impl SystemControl for Context {
     fn query_cps_lt_cap(&self) -> XCamResult<CpslCap> {
         let mut cap = CpslCap::default();
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_queryCpsLtCap(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_queryCpsLtCap(
                 self.internal.as_ptr(),
                 &mut cap,
             ))
@@ -227,7 +227,7 @@ impl SystemControl for Context {
     fn set_cps_lt_cfg<T: Into<CpslCfg>>(&self, cfg: T) -> XCamResult<()> {
         let mut cfg = cfg.into();
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_setCpsLtCfg(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_setCpsLtCfg(
                 self.internal.as_ptr(),
                 &mut cfg,
             ))
@@ -238,7 +238,7 @@ impl SystemControl for Context {
     fn update_iq<T: Into<Vec<u8>>>(&self, iq_file: T) -> XCamResult<()> {
         let iq_file = CString::new(iq_file).unwrap();
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_updateIq(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_updateIq(
                 self.internal.as_ptr(),
                 iq_file.as_ptr() as *mut _,
             ))
@@ -249,7 +249,7 @@ impl SystemControl for Context {
     fn get_crop(&self) -> XCamResult<Rect> {
         let mut crop = Rect::default();
         unsafe {
-            XCamError::from(ffi::rk_aiq_uapi_sysctl_getCrop(
+            XCamError::from(ffi::rk_aiq_uapi2_sysctl_getCrop(
                 self.internal.as_ptr(),
                 &mut crop,
             ))
@@ -277,7 +277,7 @@ impl SystemControl for Context {
 pub fn get_binded_sensor_entity_name<T: Into<Vec<u8>>>(vd: T) -> Option<String> {
     let vd = CString::new(vd).expect("CString::new failed");
     unsafe {
-        let ptr = ffi::rk_aiq_uapi_sysctl_getBindedSnsEntNmByVd(vd.as_ptr());
+        let ptr = ffi::rk_aiq_uapi2_sysctl_getBindedSnsEntNmByVd(vd.as_ptr());
         if ptr.is_null() {
             CStr::from_ptr(ptr).to_str().map(ToString::to_string).ok()
         } else {
@@ -290,7 +290,7 @@ pub fn get_static_metas<T: Into<Vec<u8>>>(vd: T) -> XCamResult<StaticInfo> {
     let vd = CString::new(vd).expect("CString::new failed");
     unsafe {
         let mut data = ffi::rk_aiq_static_info_t::default();
-        XCamError::from(ffi::rk_aiq_uapi_sysctl_getStaticMetas(
+        XCamError::from(ffi::rk_aiq_uapi2_sysctl_getStaticMetas(
             vd.as_ptr(),
             &mut data,
         ))
@@ -306,7 +306,7 @@ pub fn get_static_metas<T: Into<Vec<u8>>>(vd: T) -> XCamResult<StaticInfo> {
 pub fn enum_static_metas(index: i32) -> XCamResult<StaticInfo> {
     unsafe {
         let mut data = ffi::rk_aiq_static_info_t::default();
-        XCamError::from(ffi::rk_aiq_uapi_sysctl_enumStaticMetas(index, &mut data))
+        XCamError::from(ffi::rk_aiq_uapi2_sysctl_enumStaticMetas(index, &mut data))
             .ok()
             .map(|_| data)
     }
