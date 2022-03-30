@@ -312,6 +312,20 @@ pub fn enum_static_metas(index: i32) -> XCamResult<StaticInfo> {
     }
 }
 
+/// 预先初始化 AIQ 系统配置。
+pub fn pre_init(sns_ent_name: &str, mode: WorkingMode, iq_file: &str) -> XCamResult<()> {
+    let sns = CString::new(sns_ent_name).expect("CString::new failed");
+    let iq = CString::new(iq_file).expect("CString::new failed");
+    unsafe {
+        XCamError::from(ffi::rk_aiq_uapi2_sysctl_preInit(
+            sns.as_ptr(),
+            mode.into(),
+            iq.as_ptr(),
+        ))
+        .ok()
+    }
+}
+
 /// 设置全局日志等级。
 #[cfg(feature = "fullv")]
 pub fn set_gll(level: i32) {
