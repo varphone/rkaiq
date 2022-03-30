@@ -3,6 +3,7 @@
 //! 本项目当前基于 RKAIQ V1.0 ISP 应用接口接口实现。
 //!
 #![allow(deref_nullptr)]
+#![allow(improper_ctypes)]
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
