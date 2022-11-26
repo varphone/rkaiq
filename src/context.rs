@@ -26,6 +26,7 @@ impl Context {
                 Some(default_metas_callback),
             )
         };
+        assert!(!ptr.is_null());
         NonNull::new(ptr).map_or_else(
             || Err(io::Error::last_os_error()),
             |v| Ok(Self { internal: v }),

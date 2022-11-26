@@ -2,12 +2,16 @@ pub use rkaiq_sys as ffi;
 
 pub mod acm;
 pub mod ae;
+pub mod af;
 pub mod asd;
 pub mod awb;
 pub mod context;
+pub mod defog;
 pub mod error;
+pub mod fec;
 pub mod gamma;
 pub mod hdr;
+pub mod ldch;
 pub mod misc;
 pub mod nr;
 pub mod prelude;

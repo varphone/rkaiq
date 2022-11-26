@@ -20,6 +20,18 @@ pub trait NoiseRemoval {
 
     fn get_mt_nr_strength(&self) -> XCamResult<(bool, u32)>;
     fn set_mt_nr_strength(&self, on: bool, strength: u32) -> XCamResult<()>;
+
+    fn enable_bayernr2d(&self) -> XCamResult<()>;
+    fn disable_bayernr2d(&self) -> XCamResult<()>;
+
+    fn enable_bayernr3d(&self) -> XCamResult<()>;
+    fn disable_bayernr3d(&self) -> XCamResult<()>;
+
+    fn enable_cnr(&self) -> XCamResult<()>;
+    fn disable_cnr(&self) -> XCamResult<()>;
+
+    fn enable_ynr(&self) -> XCamResult<()>;
+    fn disable_ynr(&self) -> XCamResult<()>;
 }
 
 impl NoiseRemoval for Context {
@@ -112,6 +124,206 @@ impl NoiseRemoval for Context {
                 self.internal.as_ptr(),
                 on,
                 strength,
+            ))
+            .ok()
+        }
+    }
+
+    fn enable_bayernr2d(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_bayernr_attrib_v2_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_AUTO => {
+                    attr.stAuto.bayernr2DEn = 1;
+                }
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_MANUAL => {
+                    attr.stManual.bayernr2DEn = 1;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()
+        }
+    }
+
+    fn disable_bayernr2d(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_bayernr_attrib_v2_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_AUTO => {
+                    attr.stAuto.bayernr2DEn = 0;
+                }
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_MANUAL => {
+                    attr.stManual.bayernr2DEn = 0;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()
+        }
+    }
+
+    fn enable_bayernr3d(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_bayernr_attrib_v2_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_AUTO => {
+                    attr.stAuto.bayernr3DEn = 1;
+                }
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_MANUAL => {
+                    attr.stManual.bayernr3DEn = 1;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()
+        }
+    }
+
+    fn disable_bayernr3d(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_bayernr_attrib_v2_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_AUTO => {
+                    attr.stAuto.bayernr3DEn = 0;
+                }
+                ffi::Abayernr_OPMode_t::ABAYERNR_OP_MODE_MANUAL => {
+                    attr.stManual.bayernr3DEn = 0;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_abayernrV2_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()
+        }
+    }
+
+    fn enable_cnr(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_cnr_attrib_v1_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_acnrV1_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Acnr_OPMode_t::ACNR_OP_MODE_AUTO => {
+                    attr.stAuto.cnrEn = 1;
+                }
+                ffi::Acnr_OPMode_t::ACNR_OP_MODE_MANUAL => {
+                    attr.stManual.cnrEn = 1;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_acnrV1_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()
+        }
+    }
+
+    fn disable_cnr(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_cnr_attrib_v1_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_acnrV1_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Acnr_OPMode_t::ACNR_OP_MODE_AUTO => {
+                    attr.stAuto.cnrEn = 0;
+                }
+                ffi::Acnr_OPMode_t::ACNR_OP_MODE_MANUAL => {
+                    attr.stManual.cnrEn = 0;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_acnrV1_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()
+        }
+    }
+
+    fn enable_ynr(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_ynr_attrib_v2_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_aynrV2_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Aynr_OPMode_t::AYNR_OP_MODE_AUTO => {
+                    attr.stAuto.ynrEn = 1;
+                }
+                ffi::Aynr_OPMode_t::AYNR_OP_MODE_MANUAL => {
+                    attr.stManual.ynrEn = 1;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_aynrV2_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()
+        }
+    }
+
+    fn disable_ynr(&self) -> XCamResult<()> {
+        unsafe {
+            let mut attr: ffi::rk_aiq_ynr_attrib_v2_t = Default::default();
+            XCamError::from(ffi::rk_aiq_user_api2_aynrV2_GetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
+            ))
+            .ok()?;
+            match attr.eMode {
+                ffi::Aynr_OPMode_t::AYNR_OP_MODE_AUTO => {
+                    attr.stAuto.ynrEn = 0;
+                }
+                ffi::Aynr_OPMode_t::AYNR_OP_MODE_MANUAL => {
+                    attr.stManual.ynrEn = 0;
+                }
+                _ => {}
+            }
+            XCamError::from(ffi::rk_aiq_user_api2_aynrV2_SetAttrib(
+                self.internal.as_ptr(),
+                &mut attr,
             ))
             .ok()
         }
