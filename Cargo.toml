@@ -15,9 +15,11 @@ authors = [ "Varphone Wong <varphone@qq.com>"]
 rkaiq-sys = { version = "0.1.0", path = "rkaiq-sys" }
 
 [dev-dependencies]
-gst = { version = "0.17", package = "gstreamer" }
-gst-base = { version = "0.17", package = "gstreamer-base" }
-gst-video = { version = "0.17", package = "gstreamer-video" }
+gst = { version = "0.19", package = "gstreamer" }
+gst-base = { version = "0.19", package = "gstreamer-base" }
+gst-video = { version = "0.19", package = "gstreamer-video" }
+log = { version = "0.4", features = ["std"] }
+pretty_env_logger = "0.4"
 
 [features]
 default = ["rel_2_0"]
