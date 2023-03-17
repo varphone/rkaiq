@@ -12,7 +12,7 @@ authors = [ "Varphone Wong <varphone@qq.com>"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rkaiq-sys = { version = "0.1.0", path = "rkaiq-sys" }
+rkaiq-sys = { version = "0.1.5", path = "rkaiq-sys" }
 regex = "1"
 
 [dev-dependencies]
