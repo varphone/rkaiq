@@ -8,6 +8,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unaligned_references)]
+#![allow(clippy::derivable_impls)]
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
