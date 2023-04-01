@@ -1,0 +1,28 @@
+[build]
+target = "aarch64-unknown-linux-gnu"
+
+[target.aarch64-unknown-linux-gnu]
+linker = "/opt/fullv/rk3588s-fvl06/host/bin/aarch64-buildroot-linux-gnu-gcc"
+runner = "./target-runner.sh"
+rustflags = [
+    "-C", "link-arg=-B/usr/local/bin/mold"
+]
+strip = { path = "/opt/fullv/rk3588s-fvl06/host/bin/aarch64-buildroot-linux-gnu-strip" }
+
+[env]
+CROSS_COMPILE = "/opt/fullv/rk3588s-fvl06/host/bin/aarch64-buildroot-linux-gnu-"
+PKG_CONFIG_PATH = "/opt/fullv/rk3588s-fvl06/staging/usr/lib/pkgconfig"
+PKG_CONFIG_SYSROOT_DIR = "/opt/fullv/rk3588s-fvl06/staging"
+
+RKAIQ_INCLUDE_DIR = "/opt/fullv/rk3588s-fvl06/staging/usr/include/rkaiq"
+TARGET_SYSROOT_DIR = "/opt/fullv/rk3588s-fvl06/staging"
+
+TARGET_SSH_HOST = "192.168.2.123"
+TARGET_SSH_PSWD = ""
+
+[http]
+# proxy = "http://192.168.2.11:8080"
+
+[net]
+git-fetch-with-cli = true
+# offline = true
