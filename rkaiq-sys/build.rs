@@ -6,16 +6,25 @@ use std::path::PathBuf;
 const DEFAULT_RKAIQ_INCLUDE_DIR: &str = "/opt/fullv/2021.02.8-rklaser1/staging/usr/include/rkaiq";
 const DEFAULT_TARGET_SYSROOT_DIR: &str = "/opt/fullv/2021.02.8-rklaser1/staging";
 
-#[cfg(feature = "isp-hw-v20")]
+#[cfg(feature = "isp_hw_v20")]
 const DEFAULT_ISP_HW_VER_DEF: &str = "-DISP_HW_V20=1";
-#[cfg(feature = "isp-hw-v21")]
+#[cfg(feature = "isp_hw_v21")]
 const DEFAULT_ISP_HW_VER_DEF: &str = "-DISP_HW_V21=1";
-#[cfg(not(any(feature = "isp-hw-v20", feature = "isp-hw-v21")))]
-const DEFAULT_ISP_HW_VER_DEF: &str = "-DISP_HW_V21=1";
+#[cfg(feature = "isp_hw_v30")]
+const DEFAULT_ISP_HW_VER_DEF: &str = "-DISP_HW_V30=1";
+#[cfg(feature = "isp_hw_v31")]
+const DEFAULT_ISP_HW_VER_DEF: &str = "-DISP_HW_V31=1";
+#[cfg(not(any(
+    feature = "isp_hw_v20",
+    feature = "isp_hw_v21",
+    feature = "isp_hw_v30",
+    feature = "isp_hw_v31"
+)))]
+const DEFAULT_ISP_HW_VER_DEF: &str = "-DISP_HW_V30=1";
 
 fn main() {
     println!("cargo:rerun-if-env-changed=RKAIQ_INCLUDE_DIR");
-    println!("cargo:rerun-if-env-changed=RKAIQ_SYSROOT_DIR");
+    println!("cargo:rerun-if-env-changed=TARGET_SYSROOT_DIR");
     println!("cargo:rerun-if-changed=build.rs");
 
     let rkaiq_include_dir =
@@ -82,6 +91,9 @@ fn main() {
         .derive_eq(true)
         .impl_partialeq(true)
         .allowlist_function("rk_aiq_.*")
+        .no_debug("rk_aiq_lens_info_t")
+        .no_debug("rk_aiq_sensor_info_t")
+        .no_debug("rk_aiq_static_info_t")
         .clang_args(defines)
         .clang_arg(format!("-I{}/algos/adebayer", rkaiq_include_dir))
         .clang_arg(format!("-I{}/algos/afec", rkaiq_include_dir))
