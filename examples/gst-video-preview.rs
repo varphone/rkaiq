@@ -89,7 +89,7 @@ fn main() {
 
     // 5 秒钟后停止 GStreamer 管线
     delay_ms(5000);
-    gst_bus.post(&gst::message::Eos::new()).unwrap();
+    gst_bus.post(gst::message::Eos::new()).unwrap();
     gst_thread.join().unwrap();
 
     // 停止 AIQ 控制系统
