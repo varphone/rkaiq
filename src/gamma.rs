@@ -4,10 +4,15 @@
 use super::context::Context;
 use super::error::XCamError;
 use super::ffi;
-use super::types::{
-    GammaApiManual, GammaAttr, GammaCaliDb, GammaCurveType, GammaCurveUsrDefine1Para,
-    GammaCurveUsrDefine2Para, GammaOpMode, XCamResult,
-};
+#[cfg(all(feature = "v3_0", feature = "isp_hw_v21"))]
+use super::types::GammaApiManualV21;
+#[cfg(all(feature = "v3_0", feature = "isp_hw_v30"))]
+use super::types::GammaApiManualV30;
+#[cfg(any(feature = "v2_0", all(feature = "v3_0", feature = "isp_hw_v21")))]
+use super::types::GammaCurveType;
+#[cfg(feature = "v2_0")]
+use super::types::{GammaApiManual, GammaCurveUsrDefine1Para, GammaCurveUsrDefine2Para};
+use super::types::{GammaAttr, GammaCaliDb, GammaOpMode, XCamResult};
 
 /// 一个描述 Gamma 控制的契定。
 pub trait Gamma {
@@ -20,6 +25,7 @@ pub trait Gamma {
 
 impl Gamma for Context {
     fn get_gamma_coef(&self) -> XCamResult<GammaAttr> {
+        #[cfg(feature = "v2_0")]
         unsafe {
             let mut gamma_attr = GammaAttr::default();
             XCamError::from(ffi::rk_aiq_user_api_agamma_GetAttrib(
@@ -29,11 +35,30 @@ impl Gamma for Context {
             .ok()
             .map(|_| gamma_attr)
         }
+        #[cfg(feature = "v3_0")]
+        unsafe {
+            let mut gamma_attr = GammaAttr::default();
+            XCamError::from(ffi::rk_aiq_user_api2_agamma_GetAttrib(
+                self.internal.as_ptr(),
+                &mut gamma_attr,
+            ))
+            .ok()
+            .map(|_| gamma_attr)
+        }
     }
 
     fn set_gamma_coef<T: Into<GammaAttr>>(&self, gamma_attr: T) -> XCamResult<()> {
+        #[cfg(feature = "v2_0")]
         unsafe {
             XCamError::from(ffi::rk_aiq_user_api_agamma_SetAttrib(
+                self.internal.as_ptr(),
+                gamma_attr.into(),
+            ))
+            .ok()
+        }
+        #[cfg(feature = "v3_0")]
+        unsafe {
+            XCamError::from(ffi::rk_aiq_user_api2_agamma_SetAttrib(
                 self.internal.as_ptr(),
                 gamma_attr.into(),
             ))
@@ -45,7 +70,12 @@ impl Gamma for Context {
 /// 一个代表 Gamma 属性构建器的类型。
 pub struct GammaAttrBuilder {
     mode: Option<GammaOpMode>,
+    #[cfg(feature = "v2_0")]
     manual: Option<GammaApiManual>,
+    #[cfg(all(feature = "v3_0", feature = "isp_hw_v21"))]
+    manual: Option<GammaApiManualV21>,
+    #[cfg(all(feature = "v3_0", feature = "isp_hw_v30"))]
+    manual: Option<GammaApiManualV30>,
     tool: Option<GammaCaliDb>,
     scene_mode: Option<i32>,
 }
@@ -55,6 +85,9 @@ impl GammaAttrBuilder {
     pub fn new() -> Self {
         Self {
             mode: None,
+            #[cfg(feature = "v2_0")]
+            manual: None,
+            #[cfg(feature = "v3_0")]
             manual: None,
             tool: None,
             scene_mode: None,
@@ -62,6 +95,7 @@ impl GammaAttrBuilder {
     }
 
     /// 创建一个用于配置手动曲线系数的 Gamma 属性构建器。
+    #[cfg(feature = "v2_0")]
     pub fn with_manual_usr_define1(coef1: f32, coef2: f32) -> Self {
         Self {
             mode: Some(GammaOpMode::RK_AIQ_GAMMA_MODE_MANUAL),
@@ -76,7 +110,39 @@ impl GammaAttrBuilder {
         }
     }
 
+    /// 创建一个用于配置手动曲线系数的 Gamma 属性构建器。
+    #[cfg(all(feature = "v3_0", feature = "isp_hw_v21"))]
+    pub fn with_manual_usr_define1(_coef1: f32, _coef2: f32) -> Self {
+        Self {
+            mode: Some(GammaOpMode::RK_AIQ_GAMMA_MODE_MANUAL),
+            manual: Some(GammaApiManualV21 {
+                Gamma_en: true,
+                Gamma_out_segnum: GammaCurveType::GAMMATYPE_LOG,
+                Gamma_out_offset: 0,
+                Gamma_curve: [0; 45],
+            }),
+            tool: None,
+            scene_mode: None,
+        }
+    }
+
+    /// 创建一个用于配置手动曲线系数的 Gamma 属性构建器。
+    #[cfg(all(feature = "v3_0", feature = "isp_hw_v30"))]
+    pub fn with_manual_usr_define1(_coef1: f32, _coef2: f32) -> Self {
+        Self {
+            mode: Some(GammaOpMode::RK_AIQ_GAMMA_MODE_MANUAL),
+            manual: Some(GammaApiManualV30 {
+                Gamma_en: true,
+                Gamma_out_offset: 0,
+                Gamma_curve: [0; 49],
+            }),
+            tool: None,
+            scene_mode: None,
+        }
+    }
+
     /// 创建一个用于配置手动曲线表的 Gamma 属性构建器。
+    #[cfg(feature = "v2_0")]
     pub fn with_manual_usr_define2(table: &[i32]) -> Self {
         assert_eq!(table.len(), 45);
         let mut gamma_table: [i32; 45] = [0; 45];
@@ -98,18 +164,75 @@ impl GammaAttrBuilder {
         }
     }
 
+    /// 创建一个用于配置手动曲线表的 Gamma 属性构建器。
+    #[cfg(all(feature = "v3_0", feature = "isp_hw_v21"))]
+    pub fn with_manual_usr_define2(table: &[u16]) -> Self {
+        assert_eq!(table.len(), 45);
+        let mut gamma_table: [u16; 45] = [0; 45];
+        gamma_table.copy_from_slice(&table[0..45]);
+        Self {
+            mode: Some(GammaOpMode::RK_AIQ_GAMMA_MODE_MANUAL),
+            manual: Some(GammaApiManualV21 {
+                Gamma_en: true,
+                Gamma_out_segnum: GammaCurveType::GAMMATYPE_LOG,
+                Gamma_out_offset: 0,
+                Gamma_curve: gamma_table,
+            }),
+            tool: None,
+            scene_mode: None,
+        }
+    }
+
+    /// 创建一个用于配置手动曲线表的 Gamma 属性构建器。
+    #[cfg(all(feature = "v3_0", feature = "isp_hw_v30"))]
+    pub fn with_manual_usr_define2(table: &[u16]) -> Self {
+        assert_eq!(table.len(), 49);
+        let mut gamma_table: [u16; 49] = [0; 49];
+        gamma_table.copy_from_slice(&table[0..49]);
+        Self {
+            mode: Some(GammaOpMode::RK_AIQ_GAMMA_MODE_MANUAL),
+            manual: Some(GammaApiManualV30 {
+                Gamma_en: true,
+                Gamma_out_offset: 0,
+                Gamma_curve: gamma_table,
+            }),
+            tool: None,
+            scene_mode: None,
+        }
+    }
+
     /// 返回 Gamma 属性。
     pub fn build(self) -> GammaAttr {
         let mut attr = GammaAttr::default();
+        #[cfg(feature = "v2_0")]
         if let Some(ref v) = self.mode {
             attr.mode = *v;
         }
+        #[cfg(all(feature = "v3_0", feature = "isp_hw_v21"))]
+        if let Some(ref v) = self.mode {
+            attr.atrrV21.mode = *v;
+        }
+        #[cfg(all(feature = "v3_0", feature = "isp_hw_v30"))]
+        if let Some(ref v) = self.mode {
+            attr.atrrV30.mode = *v;
+        }
+        #[cfg(feature = "v2_0")]
         if let Some(ref v) = self.manual {
             attr.stManual = *v;
         }
+        #[cfg(all(feature = "v3_0", feature = "isp_hw_v21"))]
+        if let Some(ref v) = self.manual {
+            attr.atrrV21.stManual = *v;
+        }
+        #[cfg(all(feature = "v3_0", feature = "isp_hw_v30"))]
+        if let Some(ref v) = self.manual {
+            attr.atrrV30.stManual = *v;
+        }
+        #[cfg(feature = "v2_0")]
         if let Some(ref v) = self.tool {
             attr.stTool = *v;
         }
+        #[cfg(feature = "v2_0")]
         if let Some(ref v) = self.scene_mode {
             attr.Scene_mode = *v;
         }

@@ -131,7 +131,7 @@ impl AutoWhiteBalance for Context {
 }
 
 pub enum WbOpMode {
-    #[cfg(feature = "rel_1_0")]
+    #[cfg(feature = "v1_0")]
     Invalid,
     Manual,
     Auto,
@@ -143,14 +143,14 @@ impl From<ffi::opMode_t> for WbOpMode {
         use ffi::opMode_t::*;
         match val {
             OP_AUTO => WbOpMode::Auto,
-            #[cfg(feature = "rel_1_0")]
+            #[cfg(feature = "v1_0")]
             OP_SEMI_AUTO => WbOpMode::Invalid,
-            #[cfg(not(feature = "rel_1_0"))]
+            #[cfg(not(feature = "v1_0"))]
             OP_SEMI_AUTO => WbOpMode::Max,
             OP_MANUAL => WbOpMode::Manual,
-            #[cfg(feature = "rel_1_0")]
+            #[cfg(feature = "v1_0")]
             _ => WbOpMode::Invalid,
-            #[cfg(not(feature = "rel_1_0"))]
+            #[cfg(not(feature = "v1_0"))]
             _ => WbOpMode::Max,
         }
     }
@@ -160,7 +160,7 @@ impl From<ffi::rk_aiq_wb_op_mode_t> for WbOpMode {
     fn from(val: ffi::rk_aiq_wb_op_mode_t) -> Self {
         use ffi::rk_aiq_wb_op_mode_t::*;
         match val {
-            #[cfg(feature = "rel_1_0")]
+            #[cfg(feature = "v1_0")]
             RK_AIQ_WB_MODE_INVALID => WbOpMode::Invalid,
             RK_AIQ_WB_MODE_MANUAL => WbOpMode::Manual,
             RK_AIQ_WB_MODE_AUTO => WbOpMode::Auto,
@@ -173,7 +173,7 @@ impl From<WbOpMode> for ffi::opMode_t {
     fn from(val: WbOpMode) -> Self {
         use ffi::opMode_t::*;
         match val {
-            #[cfg(feature = "rel_1_0")]
+            #[cfg(feature = "v1_0")]
             WbOpMode::Invalid => OP_INVAL,
             WbOpMode::Manual => OP_MANUAL,
             WbOpMode::Auto => OP_AUTO,
@@ -186,7 +186,7 @@ impl From<WbOpMode> for ffi::rk_aiq_wb_op_mode_t {
     fn from(val: WbOpMode) -> Self {
         use ffi::rk_aiq_wb_op_mode_t::*;
         match val {
-            #[cfg(feature = "rel_1_0")]
+            #[cfg(feature = "v1_0")]
             WbOpMode::Invalid => RK_AIQ_WB_MODE_INVALID,
             WbOpMode::Manual => RK_AIQ_WB_MODE_MANUAL,
             WbOpMode::Auto => RK_AIQ_WB_MODE_AUTO,

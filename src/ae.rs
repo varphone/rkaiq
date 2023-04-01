@@ -3,14 +3,14 @@ use super::error::XCamError;
 use super::ffi;
 use super::types::{AntiFlickerMode, ExpPwrLineFreq, OpMode, XCamResult};
 
-#[cfg(feature = "rel_1_0")]
+#[cfg(feature = "v1_0")]
 pub enum AeMode {
     Auto,
     IrisPrior,
     ShutterPrior,
 }
 
-#[cfg(feature = "rel_1_0")]
+#[cfg(feature = "v1_0")]
 impl From<ffi::aeMode_t> for AeMode {
     fn from(val: ffi::aeMode_t) -> Self {
         use ffi::aeMode_t::*;
@@ -22,7 +22,7 @@ impl From<ffi::aeMode_t> for AeMode {
     }
 }
 
-#[cfg(feature = "rel_1_0")]
+#[cfg(feature = "v1_0")]
 impl From<AeMode> for ffi::aeMode_t {
     fn from(val: AeMode) -> Self {
         use ffi::aeMode_t::*;
@@ -73,9 +73,9 @@ impl From<AeMeasAreaType> for ffi::aeMeasAreaType_e {
 }
 
 pub trait AutoExposure {
-    #[cfg(feature = "rel_1_0")]
+    #[cfg(feature = "v1_0")]
     fn get_ae_mode(&self) -> XCamResult<AeMode>;
-    #[cfg(feature = "rel_1_0")]
+    #[cfg(feature = "v1_0")]
     fn set_ae_mode(&self, mode: AeMode) -> XCamResult<()>;
 
     fn get_exp_mode(&self) -> XCamResult<OpMode>;
@@ -127,7 +127,7 @@ pub trait AutoExposure {
 }
 
 impl AutoExposure for Context {
-    #[cfg(feature = "rel_1_0")]
+    #[cfg(feature = "v1_0")]
     fn get_ae_mode(&self) -> XCamResult<AeMode> {
         unsafe {
             let mut mode = ffi::aeMode_t::default();
@@ -140,7 +140,7 @@ impl AutoExposure for Context {
         }
     }
 
-    #[cfg(feature = "rel_1_0")]
+    #[cfg(feature = "v1_0")]
     fn set_ae_mode(&self, mode: AeMode) -> XCamResult<()> {
         unsafe { XCamError::from(ffi::rk_aiq_uapi_getAeMode(self.internal.as_ptr(), &mode)).ok() }
     }
@@ -278,8 +278,18 @@ impl AutoExposure for Context {
 
     fn get_dark_area_boost_strth(&self) -> XCamResult<u32> {
         let mut level: u32 = 0;
+        #[cfg(feature = "v2_0")]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_getDarkAreaBoostStrth(
+                self.internal.as_ptr(),
+                &mut level,
+            ))
+            .ok()
+            .map(|_| level)
+        }
+        #[cfg(feature = "v3_0")]
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_getDarkAreaBoostStrth(
                 self.internal.as_ptr(),
                 &mut level,
             ))
@@ -289,8 +299,17 @@ impl AutoExposure for Context {
     }
 
     fn set_dark_area_boost_strth(&self, level: u32) -> XCamResult<()> {
+        #[cfg(feature = "v2_0")]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setDarkAreaBoostStrth(
+                self.internal.as_ptr(),
+                level,
+            ))
+            .ok()
+        }
+        #[cfg(feature = "v3_0")]
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setDarkAreaBoostStrth(
                 self.internal.as_ptr(),
                 level,
             ))

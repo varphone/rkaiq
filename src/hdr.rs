@@ -25,8 +25,9 @@ pub trait HighDynamicRange {
 
 impl HighDynamicRange for Context {
     fn get_hdr_mode(&self) -> XCamResult<OpMode> {
-        let mut mode: ffi::opMode_t = Default::default();
+        #[cfg(feature = "v2_0")]
         unsafe {
+            let mut mode: ffi::opMode_t = Default::default();
             XCamError::from(ffi::rk_aiq_uapi_getHDRMode(
                 self.internal.as_ptr(),
                 &mut mode,
@@ -34,8 +35,11 @@ impl HighDynamicRange for Context {
             .ok()
             .map(|_| mode.into())
         }
+        #[cfg(feature = "v3_0")]
+        Ok(OpMode::Auto)
     }
 
+    #[cfg(feature = "v2_0")]
     fn set_hdr_mode<T: Into<OpMode>>(&self, mode: T) -> XCamResult<()> {
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setHDRMode(
@@ -46,11 +50,27 @@ impl HighDynamicRange for Context {
         }
     }
 
+    #[cfg(feature = "v3_0")]
+    fn set_hdr_mode<T: Into<OpMode>>(&self, _mode: T) -> XCamResult<()> {
+        Ok(())
+    }
+
     fn get_hdr_strth(&self) -> XCamResult<(bool, u32)> {
         let mut enabled: bool = false;
         let mut level: u32 = 0;
+        #[cfg(feature = "v2_0")]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_getMHDRStrth(
+                self.internal.as_ptr(),
+                &mut enabled,
+                &mut level,
+            ))
+            .ok()
+            .map(|_| (enabled, level))
+        }
+        #[cfg(feature = "v3_0")]
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_getMHDRStrth(
                 self.internal.as_ptr(),
                 &mut enabled,
                 &mut level,
@@ -61,8 +81,18 @@ impl HighDynamicRange for Context {
     }
 
     fn set_hdr_strth(&self, enabled: bool, level: u32) -> XCamResult<()> {
+        #[cfg(feature = "v2_0")]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setMHDRStrth(
+                self.internal.as_ptr(),
+                enabled,
+                level,
+            ))
+            .ok()
+        }
+        #[cfg(feature = "v3_0")]
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setMHDRStrth(
                 self.internal.as_ptr(),
                 enabled,
                 level,
