@@ -20,3 +20,15 @@ Build an run examples:
 ```sh
 cargo r --example minimal
 ```
+
+Features
+--------
+
+- `fullv` - Enable Full-V patches.
+- `isp_hw_v20` - Build for ISP_HW V20 (RV1126, RV1109)
+- `isp_hw_v21` - Build for ISP_HW V21 (RK356X)
+- `isp_hw_v30` - Build for ISP_HW V30 (RK3588)
+- `isp_hw_v31` - Build for ISP_HW V31 (???)
+- `v1_0` - Build with RKAIQ 1.0
+- `v2_0` - Build with RKAIQ 2.0
+- `v3_0` - Build with RKAIQ 3.0
