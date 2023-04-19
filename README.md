@@ -6,13 +6,20 @@ Rockchip RKAIQ bindings for Rust.
 Build Examples
 --------------
 
-Before you build the examples, you must set `PKG_CONFIG_SYSROOT_DIR` 
-to tell `pkg-config` where to find dependencies.
+Before you build the examples, you must set the env:
+
+- `PKG_CONFIG_SYSROOT_DIR`
+- `RKAIQ_INCLUDE_DIR`
+- `TARGET_SYSROOT_DIR`
+
+to tell `pkg-config` and `bindgen` where to find dependencies.
 
 For example: with Full-V RKLASER1 Boards
 
 ```sh
-export PKG_CONFIG_SYSROOT_DIR=/opt/fullv/2021.02.7-rklaser1/staging
+export PKG_CONFIG_SYSROOT_DIR=/opt/fullv/2021.02.8-rklaser1/staging
+export RKAIQ_INCLUDE_DIR=/opt/fullv/2021.02.8-rklaser1/staging/usr/include/rkaiq
+export TARGET_SYSROOT_DIR=/opt/fullv/2021.02.8-rklaser1/staging
 ```
 
 Build an run examples:
