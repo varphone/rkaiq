@@ -14,7 +14,7 @@ authors = [ "Varphone Wong <varphone@qq.com>"]
 [dependencies]
 
 [build-dependencies]
-bindgen = "0.64"
+bindgen = "0.65"
 
 [features]
 default = ["v3_0", "isp_hw_v30"]
