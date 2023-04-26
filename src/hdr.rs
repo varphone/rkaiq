@@ -35,7 +35,8 @@ impl HighDynamicRange for Context {
             .ok()
             .map(|_| mode.into())
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         Ok(OpMode::Auto)
     }
 
@@ -50,7 +51,8 @@ impl HighDynamicRange for Context {
         }
     }
 
-    #[cfg(feature = "v3_0")]
+    // #[cfg(feature = "v3_0")]
+    #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
     fn set_hdr_mode<T: Into<OpMode>>(&self, _mode: T) -> XCamResult<()> {
         Ok(())
     }
@@ -68,7 +70,8 @@ impl HighDynamicRange for Context {
             .ok()
             .map(|_| (enabled, level))
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_getMHDRStrth(
                 self.internal.as_ptr(),
@@ -90,7 +93,8 @@ impl HighDynamicRange for Context {
             ))
             .ok()
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_setMHDRStrth(
                 self.internal.as_ptr(),

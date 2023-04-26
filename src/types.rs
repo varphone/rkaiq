@@ -12,23 +12,24 @@ pub type ExpPwrLineFreq = ffi::expPwrLineFreq_t;
 pub type FrameRateInfo = ffi::frameRateInfo_t;
 #[cfg(feature = "v2_0")]
 pub type GammaApiManual = ffi::Agamma_api_manual_t;
-#[cfg(feature = "v3_0")]
+#[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
 pub type GammaApiManualV21 = ffi::Agamma_api_manualV21_t;
-#[cfg(feature = "v3_0")]
+#[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
 pub type GammaApiManualV30 = ffi::Agamma_api_manualV30_t;
 #[cfg(feature = "v2_0")]
 pub type GammaAttr = ffi::rk_aiq_gamma_attrib_t;
-#[cfg(feature = "v3_0")]
+#[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
 pub type GammaAttr = ffi::rk_aiq_gamma_attr_t;
 pub type GammaCaliDb = ffi::CalibDb_Gamma_t;
 #[cfg(feature = "v2_0")]
 pub type GammaCurveType = ffi::rk_gamma_curve_type_t;
-#[cfg(feature = "v3_0")]
+#[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
 pub type GammaCurveType = ffi::GammaType_t;
 #[cfg(feature = "v2_0")]
 pub type GammaCurveUsrDefine1Para = ffi::rk_gamma_curve_usr_define1_para_t;
 #[cfg(feature = "v2_0")]
 pub type GammaCurveUsrDefine2Para = ffi::rk_gamma_curve_usr_define2_para_t;
+pub type GammaMode = ffi::gamma_op_mode_t;
 pub type GammaOpMode = ffi::rk_aiq_gamma_op_mode_t;
 pub type GrayMode = ffi::rk_aiq_gray_mode_t;
 pub type ModuleId = ffi::rk_aiq_module_id_t;
@@ -44,7 +45,7 @@ pub enum OpMode {
     Auto,
     Manual,
     SemiAuto,
-    #[cfg(feature = "v3_0")]
+    #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
     RegManual,
     Invalid,
 }
@@ -56,7 +57,7 @@ impl From<ffi::opMode_t> for OpMode {
             OP_AUTO => OpMode::Auto,
             OP_MANUAL => OpMode::Manual,
             OP_SEMI_AUTO => OpMode::SemiAuto,
-            #[cfg(feature = "v3_0")]
+            #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
             OP_REG_MANUAL => OpMode::RegManual,
             OP_INVAL => OpMode::Invalid,
         }
@@ -70,7 +71,7 @@ impl From<OpMode> for ffi::opMode_t {
             OpMode::Auto => OP_AUTO,
             OpMode::Manual => OP_MANUAL,
             OpMode::SemiAuto => OP_SEMI_AUTO,
-            #[cfg(feature = "v3_0")]
+            #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
             OpMode::RegManual => OP_REG_MANUAL,
             OpMode::Invalid => OP_INVAL,
         }

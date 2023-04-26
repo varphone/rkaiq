@@ -287,7 +287,8 @@ impl AutoExposure for Context {
             .ok()
             .map(|_| level)
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_getDarkAreaBoostStrth(
                 self.internal.as_ptr(),
@@ -307,7 +308,8 @@ impl AutoExposure for Context {
             ))
             .ok()
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_setDarkAreaBoostStrth(
                 self.internal.as_ptr(),

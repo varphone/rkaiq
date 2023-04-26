@@ -20,7 +20,8 @@ impl Defog for Context {
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_enableDhz(self.internal.as_ptr())).ok()
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_setDehazeEnable(
                 self.internal.as_ptr(),
@@ -35,7 +36,8 @@ impl Defog for Context {
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_disableDhz(self.internal.as_ptr())).ok()
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_setDehazeEnable(
                 self.internal.as_ptr(),
@@ -56,7 +58,8 @@ impl Defog for Context {
             .ok()
             .map(|_| mode.into())
         }
-        #[cfg(feature = "v3_0")]
+        // #[cfg(feature = "v3_0")]
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         Ok(OpMode::Auto)
     }
 
@@ -71,7 +74,7 @@ impl Defog for Context {
         }
     }
 
-    #[cfg(feature = "v3_0")]
+    #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
     fn set_dhz_mode(&self, _mode: OpMode) -> XCamResult<()> {
         Ok(())
     }
