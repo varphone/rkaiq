@@ -54,9 +54,21 @@ impl AutoWhiteBalance for Context {
         }
     }
 
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn set_wb_mode(&self, mode: OpMode) -> XCamResult<()> {
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setWBMode(
+                self.internal.as_ptr(),
+                mode.into(),
+            ))
+            .ok()
+        }
+    }
+
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn set_wb_mode(&self, mode: OpMode) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setWBMode(
                 self.internal.as_ptr(),
                 mode.into(),
             ))

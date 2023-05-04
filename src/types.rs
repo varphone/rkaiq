@@ -33,6 +33,7 @@ pub type GammaMode = ffi::gamma_op_mode_t;
 pub type GammaOpMode = ffi::rk_aiq_gamma_op_mode_t;
 pub type GrayMode = ffi::rk_aiq_gray_mode_t;
 pub type ModuleId = ffi::rk_aiq_module_id_t;
+pub type PaRange = ffi::paRange_t;
 pub type Rect = ffi::rk_aiq_rect_t;
 pub type StaticInfo = ffi::rk_aiq_static_info_t;
 pub type WbGain = ffi::rk_aiq_wb_gain_t;

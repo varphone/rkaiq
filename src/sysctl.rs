@@ -330,14 +330,20 @@ pub fn pre_init(sns_ent_name: &str, mode: WorkingMode, iq_file: &str) -> XCamRes
 #[cfg(feature = "fullv")]
 pub fn set_gll(level: i32) {
     unsafe {
+        #[cfg(any(feature = "v2_0", feature = "v3_0"))]
         ffi::rk_aiq_uapi_sysctl_set_gll(level);
+        #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+        ffi::rk_aiq_uapi2_sysctl_set_gll(level);
     }
 }
 
 /// 获取全局日志等级。
 #[cfg(feature = "fullv")]
 pub fn get_gll() -> i32 {
+    #[cfg(any(feature = "v2_0", feature = "v3_0"))]
     unsafe { ffi::rk_aiq_uapi_sysctl_get_gll() }
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    unsafe { ffi::rk_aiq_uapi2_sysctl_get_gll() }
 }
 
 /// 初始化 RKAIQ 库。
@@ -362,7 +368,10 @@ pub fn set_log_callback(
     cb: Option<unsafe extern "C" fn(i32, *const std::os::raw::c_char, *const std::os::raw::c_char)>,
 ) {
     unsafe {
+        #[cfg(any(feature = "v2_0", feature = "v3_0"))]
         ffi::rk_aiq_set_log_callback(cb);
+        #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+        ffi::rk_aiq_uapi2_set_log_callback(cb);
     }
 }
 

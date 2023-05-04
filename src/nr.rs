@@ -69,9 +69,21 @@ impl NoiseRemoval for Context {
         }
     }
 
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn set_anr_strength(&self, strength: u32) -> XCamResult<()> {
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setANRStrth(
+                self.internal.as_ptr(),
+                strength,
+            ))
+            .ok()
+        }
+    }
+
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn set_anr_strength(&self, strength: u32) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setANRStrth(
                 self.internal.as_ptr(),
                 strength,
             ))
@@ -93,9 +105,22 @@ impl NoiseRemoval for Context {
         }
     }
 
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn set_ms_nr_strength(&self, on: bool, strength: u32) -> XCamResult<()> {
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setMSpaNRStrth(
+                self.internal.as_ptr(),
+                on,
+                strength,
+            ))
+            .ok()
+        }
+    }
+
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn set_ms_nr_strength(&self, on: bool, strength: u32) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setMSpaNRStrth(
                 self.internal.as_ptr(),
                 on,
                 strength,
@@ -118,9 +143,22 @@ impl NoiseRemoval for Context {
         }
     }
 
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn set_mt_nr_strength(&self, on: bool, strength: u32) -> XCamResult<()> {
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setMTNRStrth(
+                self.internal.as_ptr(),
+                on,
+                strength,
+            ))
+            .ok()
+        }
+    }
+
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn set_mt_nr_strength(&self, on: bool, strength: u32) -> XCamResult<()> {
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setMTNRStrth(
                 self.internal.as_ptr(),
                 on,
                 strength,
