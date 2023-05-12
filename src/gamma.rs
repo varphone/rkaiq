@@ -4,13 +4,11 @@
 use super::context::Context;
 use super::error::XCamError;
 use super::ffi;
-// #[cfg(all(feature = "v3_0", feature = "isp_hw_v21"))]
 #[cfg(all(
     any(feature = "v3_0", feature = "v4_0", feature = "v5_0"),
     feature = "isp_hw_v21"
 ))]
 use super::types::GammaApiManualV21;
-// #[cfg(all(feature = "v3_0", feature = "isp_hw_v30"))]
 #[cfg(all(
     any(feature = "v3_0", feature = "v4_0", feature = "v5_0"),
     feature = "isp_hw_v30"
@@ -49,7 +47,6 @@ impl Gamma for Context {
             .ok()
             .map(|_| gamma_attr)
         }
-        // #[cfg(feature = "v3_0")]
         #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             let mut gamma_attr = GammaAttr::default();
@@ -71,7 +68,6 @@ impl Gamma for Context {
             ))
             .ok()
         }
-        // #[cfg(feature = "v3_0")]
         #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_user_api2_agamma_SetAttrib(
@@ -121,7 +117,7 @@ impl GammaAttrBuilder {
     #[cfg(feature = "v2_0")]
     pub fn with_manual_usr_define1(coef1: f32, coef2: f32) -> Self {
         Self {
-            mode: Some(GammaMode::GAMMA_MODE_MANUAL),
+            mode: Some(GammaMode::RK_AIQ_GAMMA_MODE_MANUAL),
             manual: Some(GammaApiManual {
                 en: true,
                 CurveType: GammaCurveType::RK_GAMMA_CURVE_TYPE_USER_DEFINE1,
@@ -177,7 +173,7 @@ impl GammaAttrBuilder {
         let mut gamma_table: [i32; 45] = [0; 45];
         gamma_table.copy_from_slice(&table[0..45]);
         Self {
-            mode: Some(GammaMode::GAMMA_MODE_MANUAL),
+            mode: Some(GammaMode::RK_AIQ_GAMMA_MODE_MANUAL),
             manual: Some(GammaApiManual {
                 en: true,
                 CurveType: GammaCurveType::RK_GAMMA_CURVE_TYPE_USER_DEFINE2,

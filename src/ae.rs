@@ -1,7 +1,7 @@
 use super::context::Context;
 use super::error::XCamError;
 use super::ffi;
-use super::types::{AntiFlickerMode, ExpPwrLineFreq, OpMode, XCamResult, PaRange};
+use super::types::{AntiFlickerMode, ExpPwrLineFreq, OpMode, PaRange, XCamResult};
 
 #[cfg(feature = "v1_0")]
 pub enum AeMode {
@@ -240,10 +240,22 @@ impl AutoExposure for Context {
     #[cfg(any(feature = "v4_0", feature = "v5_0"))]
     fn set_manual_exp(&self, gain: f32, time: f32) -> XCamResult<()> {
         unsafe {
-            let mut gain_pa = PaRange{ min: gain, max: gain };
-            let mut time_pa = PaRange{ min: time, max: time };
-            let r1 = XCamError::from(ffi::rk_aiq_uapi2_setExpGainRange(self.internal.as_ptr(), &mut gain_pa));
-            let r2 = XCamError::from(ffi::rk_aiq_uapi2_setExpTimeRange(self.internal.as_ptr(), &mut time_pa));
+            let mut gain_pa = PaRange {
+                min: gain,
+                max: gain,
+            };
+            let mut time_pa = PaRange {
+                min: time,
+                max: time,
+            };
+            let r1 = XCamError::from(ffi::rk_aiq_uapi2_setExpGainRange(
+                self.internal.as_ptr(),
+                &mut gain_pa,
+            ));
+            let r2 = XCamError::from(ffi::rk_aiq_uapi2_setExpTimeRange(
+                self.internal.as_ptr(),
+                &mut time_pa,
+            ));
             r1.ok().and(r2.ok())
         }
     }

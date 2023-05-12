@@ -341,9 +341,13 @@ pub fn set_gll(level: i32) {
 #[cfg(feature = "fullv")]
 pub fn get_gll() -> i32 {
     #[cfg(any(feature = "v2_0", feature = "v3_0"))]
-    unsafe { ffi::rk_aiq_uapi_sysctl_get_gll() }
+    unsafe {
+        ffi::rk_aiq_uapi_sysctl_get_gll()
+    }
     #[cfg(any(feature = "v4_0", feature = "v5_0"))]
-    unsafe { ffi::rk_aiq_uapi2_sysctl_get_gll() }
+    unsafe {
+        ffi::rk_aiq_uapi2_sysctl_get_gll()
+    }
 }
 
 /// 初始化 RKAIQ 库。
