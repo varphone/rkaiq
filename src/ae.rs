@@ -145,10 +145,24 @@ impl AutoExposure for Context {
         unsafe { XCamError::from(ffi::rk_aiq_uapi_getAeMode(self.internal.as_ptr(), &mode)).ok() }
     }
 
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn get_exp_mode(&self) -> XCamResult<OpMode> {
         unsafe {
             let mut mode = ffi::opMode_t::OP_INVAL;
             XCamError::from(ffi::rk_aiq_uapi_getExpMode(
+                self.internal.as_ptr(),
+                &mut mode,
+            ))
+            .ok()
+            .map(|_| mode.into())
+        }
+    }
+
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn get_exp_mode(&self) -> XCamResult<OpMode> {
+        unsafe {
+            let mut mode = ffi::opMode_t::OP_INVAL;
+            XCamError::from(ffi::rk_aiq_uapi2_getExpMode(
                 self.internal.as_ptr(),
                 &mut mode,
             ))
@@ -179,6 +193,7 @@ impl AutoExposure for Context {
         }
     }
 
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn get_exp_gain_range(&self) -> XCamResult<(f32, f32)> {
         unsafe {
             let mut range = ffi::paRange_t::default();
@@ -191,6 +206,20 @@ impl AutoExposure for Context {
         }
     }
 
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn get_exp_gain_range(&self) -> XCamResult<(f32, f32)> {
+        unsafe {
+            let mut range = ffi::paRange_t::default();
+            XCamError::from(ffi::rk_aiq_uapi2_getExpGainRange(
+                self.internal.as_ptr(),
+                &mut range,
+            ))
+            .ok()
+            .map(|_| (range.min, range.max))
+        }
+    }
+
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn set_exp_gain_range(&self, min: f32, max: f32) -> XCamResult<()> {
         let mut range = ffi::paRange_t { min, max };
         unsafe {
@@ -202,6 +231,19 @@ impl AutoExposure for Context {
         }
     }
 
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn set_exp_gain_range(&self, min: f32, max: f32) -> XCamResult<()> {
+        let mut range = ffi::paRange_t { min, max };
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setExpGainRange(
+                self.internal.as_ptr(),
+                &mut range,
+            ))
+            .ok()
+        }
+    }
+
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn get_exp_time_range(&self) -> XCamResult<(f32, f32)> {
         unsafe {
             let mut range = ffi::paRange_t::default();
@@ -214,10 +256,37 @@ impl AutoExposure for Context {
         }
     }
 
+
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn get_exp_time_range(&self) -> XCamResult<(f32, f32)> {
+        unsafe {
+            let mut range = ffi::paRange_t::default();
+            XCamError::from(ffi::rk_aiq_uapi2_getExpTimeRange(
+                self.internal.as_ptr(),
+                &mut range,
+            ))
+            .ok()
+            .map(|_| (range.min, range.max))
+        }
+    }
+
+    #[cfg(any(feature = "v1_0", feature = "v2_0", feature = "v3_0"))]
     fn set_exp_time_range(&self, min: f32, max: f32) -> XCamResult<()> {
         let mut range = ffi::paRange_t { min, max };
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi_setExpTimeRange(
+                self.internal.as_ptr(),
+                &mut range,
+            ))
+            .ok()
+        }
+    }
+
+    #[cfg(any(feature = "v4_0", feature = "v5_0"))]
+    fn set_exp_time_range(&self, min: f32, max: f32) -> XCamResult<()> {
+        let mut range = ffi::paRange_t { min, max };
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setExpTimeRange(
                 self.internal.as_ptr(),
                 &mut range,
             ))
@@ -323,7 +392,6 @@ impl AutoExposure for Context {
             .ok()
             .map(|_| level)
         }
-        // #[cfg(feature = "v3_0")]
         #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_getDarkAreaBoostStrth(
@@ -344,7 +412,6 @@ impl AutoExposure for Context {
             ))
             .ok()
         }
-        // #[cfg(feature = "v3_0")]
         #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
         unsafe {
             XCamError::from(ffi::rk_aiq_uapi2_setDarkAreaBoostStrth(
