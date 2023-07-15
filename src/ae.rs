@@ -256,7 +256,6 @@ impl AutoExposure for Context {
         }
     }
 
-
     #[cfg(any(feature = "v4_0", feature = "v5_0"))]
     fn get_exp_time_range(&self) -> XCamResult<(f32, f32)> {
         unsafe {
@@ -309,23 +308,21 @@ impl AutoExposure for Context {
     #[cfg(any(feature = "v4_0", feature = "v5_0"))]
     fn set_manual_exp(&self, gain: f32, time: f32) -> XCamResult<()> {
         unsafe {
-            let mut gain_pa = PaRange {
-                min: gain,
-                max: gain,
-            };
-            let mut time_pa = PaRange {
-                min: time,
-                max: time,
-            };
-            let r1 = XCamError::from(ffi::rk_aiq_uapi2_setExpGainRange(
+            let mut sw_attr = ffi::Uapi_ExpSwAttrV2_t::default();
+            use crate::ffi::RKAiqOPMode_e::RK_AIQ_OP_MODE_MANUAL;
+            ffi::rk_aiq_user_api2_ae_getExpSwAttr(self.internal.as_ptr(), &mut sw_attr);
+            sw_attr.Enable = 1;
+            sw_attr.AecOpType = RK_AIQ_OP_MODE_MANUAL;
+            // LinearAE
+            sw_attr.stManual.LinearAE.ManualGainEn = true;
+            sw_attr.stManual.LinearAE.ManualTimeEn = true;
+            sw_attr.stManual.LinearAE.GainValue = gain;
+            sw_attr.stManual.LinearAE.TimeValue = time;
+            let r1 = XCamError::from(ffi::rk_aiq_user_api2_ae_setExpSwAttr(
                 self.internal.as_ptr(),
-                &mut gain_pa,
+                sw_attr,
             ));
-            let r2 = XCamError::from(ffi::rk_aiq_uapi2_setExpTimeRange(
-                self.internal.as_ptr(),
-                &mut time_pa,
-            ));
-            r1.ok().and(r2.ok())
+            r1.ok()
         }
     }
 
