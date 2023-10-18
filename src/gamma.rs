@@ -33,6 +33,14 @@ pub trait Gamma {
 
     /// 设置伽玛。
     fn set_gamma_coef<T: Into<GammaAttr>>(&self, gamma_attr: T) -> XCamResult<()>;
+
+    /// 快速设置伽玛曲线。
+    ///
+    /// # Arguments
+    ///
+    /// * `gamma_coef` Gamma 系数，取值范围 [0,100]，默认值 2.2，精度 0.01。
+    /// * `slope_at_zero` 暗区斜率，取值范围 [-0.05,0.05]，默认值 0，精度 0.001。
+    fn set_gamma_coef_fast(&self, gamma_coef: f32, slope_at_zero: f32) -> XCamResult<()>;
 }
 
 impl Gamma for Context {
@@ -73,6 +81,22 @@ impl Gamma for Context {
             XCamError::from(ffi::rk_aiq_user_api2_agamma_SetAttrib(
                 self.internal.as_ptr(),
                 gamma_attr.into(),
+            ))
+            .ok()
+        }
+    }
+
+    fn set_gamma_coef_fast(&self, gamma_coef: f32, slope_at_zero: f32) -> XCamResult<()> {
+        #[cfg(feature = "v2_0")]
+        unsafe {
+            XCamError::from(-1).ok()
+        }
+        #[cfg(any(feature = "v3_0", feature = "v4_0", feature = "v5_0"))]
+        unsafe {
+            XCamError::from(ffi::rk_aiq_uapi2_setGammaCoef(
+                self.internal.as_ptr(),
+                gamma_coef,
+                slope_at_zero,
             ))
             .ok()
         }
