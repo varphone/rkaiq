@@ -1,6 +1,6 @@
 [package]
 name = "rkaiq-sys"
-version = "5.0.4"
+version = "5.0.5"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 categories = ["embedded", "external-ffi-bindings", "graphics"]
