@@ -7,6 +7,7 @@ use std::ffi::CString;
 use std::io;
 use std::ptr::NonNull;
 
+#[derive(Debug)]
 pub struct Context {
     pub(crate) internal: NonNull<ffi::rk_aiq_sys_ctx_t>,
 }
