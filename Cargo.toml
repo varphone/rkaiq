@@ -16,11 +16,11 @@ rkaiq-sys = { path = "rkaiq-sys", default-features = false }
 regex = "1"
 
 [dev-dependencies]
-gst = { version = "0.20", package = "gstreamer" }
-gst-base = { version = "0.20", package = "gstreamer-base" }
-gst-video = { version = "0.20", package = "gstreamer-video" }
+gst = { version = "0.22", package = "gstreamer" }
+gst-base = { version = "0.22", package = "gstreamer-base" }
+gst-video = { version = "0.22", package = "gstreamer-video" }
 log = { version = "0.4", features = ["std"] }
-pretty_env_logger = "0.4"
+pretty_env_logger = "0.5"
 
 [features]
 default = ["v5_0", "isp_hw_v30"]
