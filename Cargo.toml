@@ -1,42 +1,18 @@
-[package]
-name = "rkaiq"
+[workspace]
+members = [
+    "crates/rkaiq",
+    "crates/rkaiq-sys",
+]
+resolver = "2"
+
+[workspace.package]
 version = "5.0.6"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-categories = ["embedded", "external-ffi-bindings", "graphics"]
-description = "Rockchip RKAIQ bindings for Rust"
-documentation = "https://docs.rs/rkaiq"
 repository = "https://github.com/varphone/rkaiq.git"
 authors = [ "Varphone Wong <varphone@qq.com>"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-rkaiq-sys = { path = "rkaiq-sys", default-features = false }
+[workspace.dependencies]
 regex = "1"
-
-[dev-dependencies]
-gst = { version = "0.22", package = "gstreamer" }
-gst-base = { version = "0.22", package = "gstreamer-base" }
-gst-video = { version = "0.22", package = "gstreamer-video" }
-log = { version = "0.4", features = ["std"] }
-pretty_env_logger = "0.5"
-
-[features]
-default = ["v5_0", "isp_hw_v30"]
-fullv = ["rkaiq-sys/fullv"]
-isp_hw_v20 = ["rkaiq-sys/isp_hw_v20"]
-isp_hw_v21 = ["rkaiq-sys/isp_hw_v21"]
-isp_hw_v30 = ["rkaiq-sys/isp_hw_v30"]
-isp_hw_v31 = ["rkaiq-sys/isp_hw_v31"]
-isp_hw_v32 = ["rkaiq-sys/isp_hw_v32"]
-v1_0 = ["rkaiq-sys/v1_0"]
-v2_0 = ["rkaiq-sys/v2_0"]
-v3_0 = ["rkaiq-sys/v3_0"]
-v4_0 = ["rkaiq-sys/v4_0"]
-v5_0 = ["rkaiq-sys/v5_0"]
-
-[workspace]
-members = [
-    "rkaiq-sys",
-]
+rkaiq = { version = "5.0", path = "crates/rkaiq", default-features = false }
+rkaiq-sys = { version = "5.0", path = "crates/rkaiq-sys", default-features = false }
